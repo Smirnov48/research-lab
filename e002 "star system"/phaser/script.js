@@ -12,6 +12,9 @@ let game = new Phaser.Game(config);
 
 let graphics;
 let starLine;
+let rect;
+
+let asteroids = [];
 
 function drawStar() {
 	for (let i = 0; i < 10; i++) {
@@ -20,28 +23,45 @@ function drawStar() {
 		
 		starLine.x1 = Math.cos(angle) * r + 320;
 		starLine.y1 = Math.sin(angle) * r + 180;
-		starLine.x2 = 320;//Math.cos(angle) * -r + 320;
-		starLine.y2 = 180;//Math.sin(angle) * -r + 180;
+		starLine.x2 = 320;
+		starLine.y2 = 180;
 		
 		graphics.strokeLineShape(starLine);
 	}
 }
 
 function create () {
-//	for (let i = 0; i < 300; i++) {
-//	}
 	starLine = new Phaser.Geom.Line(0, 0, 10, 10);
+	rect = new Phaser.Geom.Rectangle(0, 0, 5, 5);
 
     graphics = this.add.graphics({ fillStyle: { color: 0xFFFFFF }, lineStyle: { width: 1, color: 0xFFFFFF} });
+
+	for (let i = 0; i < 30; i++) {
+		let asteroid = {
+			x: Math.random() * 640,
+			y: Math.random() * 360,
+			size: Math.random() * 10,
+			speed: {
+				x: Math.random(),
+				y: Math.random()
+			}
+		};
+		asteroids.push(asteroid);
+	}
 }
 
 function update () {
 	graphics.clear();
 	drawStar();
-//	for (let snowflake of snowflakes) {
-
-//		let rect = new Phaser.Geom.Rectangle(snowflake.x, snowflake.y, snowflake.size, snowflake.size);
-//		graphics.fillRectShape(rect);
-
-//	}
+	for (let asteroid of asteroids) {
+		
+		asteroid.x += asteroid.speed.x;
+		asteroid.y += asteroid.speed.y;
+		
+		rect.x = asteroid.x;
+		rect.y = asteroid.y;
+		rect.width = asteroid.size;
+		rect.height = asteroid.size;	
+		graphics.fillRectShape(rect);
+	}
 }
