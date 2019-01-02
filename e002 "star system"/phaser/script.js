@@ -36,19 +36,25 @@ function create () {
 
     graphics = this.add.graphics({ fillStyle: { color: 0xFFFFFF }, lineStyle: { width: 1, color: 0xFFFFFF} });
 
-	for (let i = 0; i < 100; i++) {
+	for (let i = 0; i < 1000; i++) {
 		let asteroid = {
 			x: Math.random() * 640,
 			y: Math.random() * 360,
-			size: Math.random() * 5,
+			size: Math.random() * 2,
 			speed: {
-				x: Math.random() * 2 - 1,
-				y: Math.random() * 2 - 1
+				x: Math.random() * 6 - 3,
+				y: Math.random() * 6 - 3
 			},
 			distroyed: false
 		};
 		asteroids.push(asteroid);
 	}
+}
+
+function getDistance(x1, y1, x2, y2) {
+	let deltaX = (x2 - x1);
+	let deltaY = (y2 - y1);
+	return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 }
 
 function update () {
@@ -58,23 +64,45 @@ function update () {
 		if (asteroid.distroyed) {
 			continue;
 		}
-		let deltaX = (320 - asteroid.x);
-		let deltaY = (180 - asteroid.y);
-		let dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+		let dist = getDistance(asteroid.x, asteroid.y, 320, 160);
 		
-		if (dist < 20) {
+		if (dist < 15) {
 			asteroid.distroyed = true;
 			continue;
 		}
 		
-		asteroid.speed.x += (320 - asteroid.x) / (10 * dist);
-		asteroid.speed.y += (180 - asteroid.y) / (10 * dist);
+		for (let ast of asteroids) {
+			if (asteroid != ast && !ast.distroyed) {
+				let d = getDistance(asteroid.x, asteroid.y, ast.x, ast.y);
+				let mas = asteroid.size + ast.size;
+				if (d < mas/2) {
+					if (asteroid.size > ast.size) {
+						asteroid.speed.x = (asteroid.speed.x * asteroid.size + ast.speed.x * ast.size) / mas; 
+						asteroid.speed.y = (asteroid.speed.y * asteroid.size + ast.speed.y * ast.size) / mas;
+						asteroid.size += (asteroid.size + ast.size)/10;
+
+						ast.distroyed = true;
+					} else {
+						asteroid.distroyed = true;
+
+						ast.speed.x = (asteroid.speed.x * asteroid.size + ast.speed.x * ast.size) / mas; 
+						ast.speed.y = (asteroid.speed.y * asteroid.size + ast.speed.y * ast.size) / mas;
+						ast.size += (asteroid.size + ast.size)/10;
+					}
+					continue;
+				}
+			}
+		}
+		
+		asteroid.speed.x += (320 - asteroid.x) / (30 * dist);
+		asteroid.speed.y += (180 - asteroid.y) / (30 * dist);
 		
 		asteroid.x += asteroid.speed.x;
 		asteroid.y += asteroid.speed.y;
 		
-		rect.x = asteroid.x;
-		rect.y = asteroid.y;
+		rect.x = asteroid.x - asteroid.size/2;
+		rect.y = asteroid.y - asteroid.size/2;
 		rect.width = asteroid.size;
 		rect.height = asteroid.size;	
 		graphics.fillRectShape(rect);
