@@ -38,8 +38,8 @@ function create () {
 
 	for (let i = 0; i < 1000; i++) {
 		let asteroid = {
-			x: Math.random() * 640,
-			y: Math.random() * 360,
+			x: Math.random() * 640 * 2 - 320,
+			y: Math.random() * 360 * 2 - 180,
 			size: Math.random() * 2,
 			speed: {
 				x: Math.random() * 6 - 3,
@@ -67,7 +67,7 @@ function update () {
 
 		let dist = getDistance(asteroid.x, asteroid.y, 320, 160);
 		
-		if (dist < 15) {
+		if (dist < asteroid.size * 1.5) {
 			asteroid.distroyed = true;
 			continue;
 		}
@@ -78,17 +78,17 @@ function update () {
 				let mas = asteroid.size + ast.size;
 				if (d < mas/2) {
 					if (asteroid.size > ast.size) {
-						asteroid.speed.x = (asteroid.speed.x * asteroid.size + ast.speed.x * ast.size) / mas; 
-						asteroid.speed.y = (asteroid.speed.y * asteroid.size + ast.speed.y * ast.size) / mas;
-						asteroid.size += (asteroid.size + ast.size)/10;
+						//asteroid.speed.x = (asteroid.speed.x * asteroid.size + ast.speed.x * ast.size) / mas; 
+						//asteroid.speed.y = (asteroid.speed.y * asteroid.size + ast.speed.y * ast.size) / mas;
+						asteroid.size += (asteroid.size + ast.size)/(asteroid.size*5);
 
 						ast.distroyed = true;
 					} else {
 						asteroid.distroyed = true;
 
-						ast.speed.x = (asteroid.speed.x * asteroid.size + ast.speed.x * ast.size) / mas; 
-						ast.speed.y = (asteroid.speed.y * asteroid.size + ast.speed.y * ast.size) / mas;
-						ast.size += (asteroid.size + ast.size)/10;
+						//ast.speed.x = (asteroid.speed.x * asteroid.size + ast.speed.x * ast.size) / mas; 
+						//ast.speed.y = (asteroid.speed.y * asteroid.size + ast.speed.y * ast.size) / mas;
+						ast.size += (asteroid.size + ast.size)/(ast.size*5);
 					}
 					continue;
 				}
