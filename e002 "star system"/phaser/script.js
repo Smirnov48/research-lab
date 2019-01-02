@@ -42,9 +42,10 @@ function create () {
 			y: Math.random() * 360,
 			size: Math.random() * 5,
 			speed: {
-				x: Math.random() * 20 - 10,
-				y: Math.random() * 20 - 10
-			}
+				x: Math.random() * 2 - 1,
+				y: Math.random() * 2 - 1
+			},
+			distroyed: false
 		};
 		asteroids.push(asteroid);
 	}
@@ -54,10 +55,20 @@ function update () {
 	graphics.clear();
 	drawStar();
 	for (let asteroid of asteroids) {
+		if (asteroid.distroyed) {
+			continue;
+		}
+		let deltaX = (320 - asteroid.x);
+		let deltaY = (180 - asteroid.y);
+		let dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 		
+		if (dist < 20) {
+			asteroid.distroyed = true;
+			continue;
+		}
 		
-		asteroid.speed.x += (320 - asteroid.x) / 1000;
-		asteroid.speed.y += (180 - asteroid.y) / 1000;
+		asteroid.speed.x += (320 - asteroid.x) / (10 * dist);
+		asteroid.speed.y += (180 - asteroid.y) / (10 * dist);
 		
 		asteroid.x += asteroid.speed.x;
 		asteroid.y += asteroid.speed.y;
