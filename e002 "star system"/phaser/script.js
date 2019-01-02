@@ -36,14 +36,14 @@ function create () {
 
     graphics = this.add.graphics({ fillStyle: { color: 0xFFFFFF }, lineStyle: { width: 1, color: 0xFFFFFF} });
 
-	for (let i = 0; i < 30; i++) {
+	for (let i = 0; i < 100; i++) {
 		let asteroid = {
 			x: Math.random() * 640,
 			y: Math.random() * 360,
-			size: Math.random() * 10,
+			size: Math.random() * 5,
 			speed: {
-				x: Math.random(),
-				y: Math.random()
+				x: Math.random() * 20 - 10,
+				y: Math.random() * 20 - 10
 			}
 		};
 		asteroids.push(asteroid);
@@ -54,6 +54,10 @@ function update () {
 	graphics.clear();
 	drawStar();
 	for (let asteroid of asteroids) {
+		
+		
+		asteroid.speed.x += (320 - asteroid.x) / 1000;
+		asteroid.speed.y += (180 - asteroid.y) / 1000;
 		
 		asteroid.x += asteroid.speed.x;
 		asteroid.y += asteroid.speed.y;
